@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSQI - Calidad del Sueño</title>
+    <style>
+        :root {
+            --primary-color: #8BABD8;
+            --secondary-color: #A3D9B0;
+            --accent-color: #FFC8A3;
+            --background: #F9F9F9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background);
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .test-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .input-group {
+            margin: 1rem 0;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .resultado {
+            display: none;
+            background: var(--accent-color);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        input[type="time"], input[type="number"] {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌙 PSQI - Calidad del Sueño</h1>
+            <p>Evaluación de la calidad del sueño en el último mes</p>
+        </div>
+
+        <form id="form-psqi">
+            <!-- Pregunta 1 -->
+            <div class="test-section">
+                <h3>1. Durante el último mes, ¿cuál ha sido su hora habitual de acostarse?</h3>
+                <input type="time" name="hora_acostarse" required>
+            </div>
+
+            <!-- Pregunta 2 -->
+            <div class="test-section">
+                <h3>2. ¿Cuánto tiempo tarda normalmente en dormirse?</h3>
+                <div class="options-grid">
+                    <label><input type="radio" name="tiempo_conciliar" value="0" required> <15 min</label>
+                    <label><input type="radio" name="tiempo_conciliar" value="1"> 16-30 min</label>
+                    <label><input type="radio" name="tiempo_conciliar" value="2"> 31-60 min</label>
+                    <label><input type="radio" name="tiempo_conciliar" value="3"> >60 min</label>
+                </div>
+            </div>
+
+            <!-- Pregunta 3 -->
+            <div class="test-section">
+                <h3>3. ¿A qué hora se levanta habitualmente?</h3>
+                <input type="time" name="hora_levantarse" required>
+            </div>
+
+            <!-- Pregunta 4 -->
+            <div class="test-section">
+                <h3>4. ¿Cuántas horas duerme realmente cada noche?</h3>
+                <input type="number" name="horas_sueño" min="0" max="24" step="0.1" required> horas
+            </div>
+
+            <!-- Pregunta 5 -->
+            <div class="test-section">
+                <h3>5. Problemas para dormir por:</h3>
+                <div class="input-group">
+                    <h4>a) No conciliar sueño en media hora</h4>
+                    <div class="options-grid">
+                        <label><input type="radio" name="p5a" value="0" required> Ninguna</label>
+                        <label><input type="radio" name="p5a" value="1"> <1/sem</label>
+                        <label><input type="radio" name="p5a" value="2"> 1-2/sem</label>
+                        <label><input type="radio" name="p5a" value="3"> ≥3/sem</label>
+                    </div>
+                </div>
+                
+                <!-- Repetir misma estructura para 5b a 5j -->
+                <!-- ... -->
+            </div>
+
+            <!-- Pregunta 6 -->
+            <div class="test-section">
+                <h3>6. Calidad general del sueño</h3>
+                <div class="options-grid">
+                    <label><input type="radio" name="calidad_sueño" value="0" required> Muy buena</label>
+                    <label><input type="radio" name="calidad_sueño" value="1"> Bastante buena</label>
+                    <label><input type="radio" name="calidad_sueño" value="2"> Bastante mala</label>
+                    <label><input type="radio" name="calidad_sueño" value="3"> Muy mala</label>
+                </div>
+            </div>
+
+            <!-- Preguntas 7-10 (estructura similar) -->
+            <!-- ... -->
+
+            <button type="submit" class="btn">Calcular Resultado</button>
+        </form>
+
+        <!-- Sección de Resultados -->
+        <div class="resultado" id="resultado">
+            <h2>Resultados PSQI</h2>
+            <div id="detalle-resultados">
+                <p>Componente 1 (Calidad subjetiva): <span id="comp1">0</span></p>
+                <p>Componente 2 (Latencia): <span id="comp2">0</span></p>
+                <p>Componente 3 (Duración): <span id="comp3">0</span></p>
+                <p>Componente 4 (Eficiencia): <span id="comp4">0</span></p>
+                <p>Componente 5 (Perturbaciones): <span id="comp5">0</span></p>
+                <p>Componente 6 (Medicación): <span id="comp6">0</span></p>
+                <p>Componente 7 (Disfunción): <span id="comp7">0</span></p>
+                <h3>Puntuación Total: <span id="total">0</span>/21</h3>
+                <p>Interpretación: <span id="interpretacion"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('form-psqi').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Lógica básica de ejemplo (para estructura)
+            document.getElementById('resultado').style.display = 'block';
+            document.getElementById('total').textContent = '0';
+            document.getElementById('interpretacion').textContent = 'Sin datos reales aún';
+        });
+    </script>
+</body>
+</html>
