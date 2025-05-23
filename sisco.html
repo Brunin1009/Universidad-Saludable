@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISCO - Estrés Académico</title>
+    <style>
+        :root {
+            --primary-color: #8BABD8;
+            --secondary-color: #A3D9B0;
+            --accent-color: #FFC8A3;
+            --background: #F9F9F9;
+            --result-color: #E8F4F8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background);
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .test-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .likert-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .likert-table th, .likert-table td {
+            padding: 0.8rem;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .likert-table th {
+            background-color: var(--background);
+        }
+
+        .especificar-input {
+            width: 100%;
+            padding: 0.5rem;
+            box-sizing: border-box;
+            margin-top: 0.5rem;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        #mensaje-fin {
+            display: none;
+            background: var(--accent-color);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        #resultado-container {
+            display: none;
+            background: var(--result-color);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            border: 2px solid var(--primary-color);
+        }
+
+        .result-title {
+            color: var(--primary-color);
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .result-score {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 1rem 0;
+            color: #2c3e50;
+        }
+
+        .result-interpretation {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .likert-table td {
+                padding: 0.4rem;
+                font-size: 0.9em;
+            }
+            
+            .test-section {
+                padding: 1rem;
+            }
+        }
+
+        #resultado-container {
+        display: none;
+        background: var(--result-color);
+        padding: 2rem;
+        border-radius: 12px;
+        margin-top: 2rem;
+        transition: all 0.3s ease;
+    }
+    
+    #resultado-container.leve {
+        border-left: 5px solid #A3D9B0;
+    }
+    
+    #resultado-container.moderado {
+        border-left: 5px solid #FFC8A3;
+    }
+    
+    #resultado-container.severo {
+        border-left: 5px solid #FFA07A;
+    }
+    
+    .result-title {
+        color: var(--primary-color);
+        margin-top: 0;
+        text-align: center;
+    }
+    
+    .result-score {
+        font-size: 1.8rem;
+        font-weight: bold;
+        text-align: center;
+        margin: 1rem 0;
+        color: #2c3e50;
+    }
+    
+    .nivel-estres {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+    
+    .result-interpretation {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+    
+    .result-interpretation p {
+        margin: 0.5rem 0;
+    }
+    
+    .result-interpretation strong {
+        color: var(--primary-color);
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Inventario SISCO - Estrés Académico</h1>
+            <p>Evalúa tus niveles de estrés relacionado con actividades académicas</p>
+        </div>
+
+        <form id="form-sisco">
+            <!-- Pregunta 1 - Filtro -->
+            <div class="test-section">
+                <h3>1. Durante el transcurso de este semestre ¿has tenido momentos de preocupación o nerviosismo?</h3>
+                <label><input type="radio" name="pregunta1" value="si" required> Sí</label>
+                <label><input type="radio" name="pregunta1" value="no"> No</label>
+            </div>
+
+            <!-- Secciones que aparecen solo si responde Sí -->
+            <div id="secciones-test">
+                <!-- Pregunta 2 - Intensidad -->
+                <div class="test-section">
+                    <h3>2. Señala tu nivel de preocupación o nerviosismo (1 = poco, 5 = mucho)</h3>
+                    <div class="likert-scale">
+                        <label><input type="radio" name="pregunta2" value="1"> 1</label>
+                        <label><input type="radio" name="pregunta2" value="2"> 2</label>
+                        <label><input type="radio" name="pregunta2" value="3"> 3</label>
+                        <label><input type="radio" name="pregunta2" value="4"> 4</label>
+                        <label><input type="radio" name="pregunta2" value="5"> 5</label>
+                    </div>
+                </div>
+
+                <!-- Pregunta 3 - Estresores -->
+                <div class="test-section">
+                    <h3>3. ¿Con qué frecuencia te inquietaron estas situaciones?</h3>
+                    <table class="likert-table">
+                        <tr>
+                            <th>Situación</th>
+                            <th>1 (Nunca)</th>
+                            <th>2 (Rara vez)</th>
+                            <th>3 (Algunas veces)</th>
+                            <th>4 (Casi siempre)</th>
+                            <th>5 (Siempre)</th>
+                        </tr>
+                        <tr>
+                            <td>La competencia con los compañeros del grupo</td>
+                            <td><input type="radio" name="p3_1" value="1"></td>
+                            <td><input type="radio" name="p3_1" value="2"></td>
+                            <td><input type="radio" name="p3_1" value="3"></td>
+                            <td><input type="radio" name="p3_1" value="4"></td>
+                            <td><input type="radio" name="p3_1" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Sobrecarga de tareas y trabajos escolares</td>
+                            <td><input type="radio" name="p3_2" value="1"></td>
+                            <td><input type="radio" name="p3_2" value="2"></td>
+                            <td><input type="radio" name="p3_2" value="3"></td>
+                            <td><input type="radio" name="p3_2" value="4"></td>
+                            <td><input type="radio" name="p3_2" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>La personalidad y el carácter del profesor</td>
+                            <td><input type="radio" name="p3_3" value="1"></td>
+                            <td><input type="radio" name="p3_3" value="2"></td>
+                            <td><input type="radio" name="p3_3" value="3"></td>
+                            <td><input type="radio" name="p3_3" value="4"></td>
+                            <td><input type="radio" name="p3_3" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Las evaluaciones de los profesores</td>
+                            <td><input type="radio" name="p3_4" value="1"></td>
+                            <td><input type="radio" name="p3_4" value="2"></td>
+                            <td><input type="radio" name="p3_4" value="3"></td>
+                            <td><input type="radio" name="p3_4" value="4"></td>
+                            <td><input type="radio" name="p3_4" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>El tipo de trabajo que te piden los profesores</td>
+                            <td><input type="radio" name="p3_5" value="1"></td>
+                            <td><input type="radio" name="p3_5" value="2"></td>
+                            <td><input type="radio" name="p3_5" value="3"></td>
+                            <td><input type="radio" name="p3_5" value="4"></td>
+                            <td><input type="radio" name="p3_5" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>No entender los temas que se abordan en la clase</td>
+                            <td><input type="radio" name="p3_6" value="1"></td>
+                            <td><input type="radio" name="p3_6" value="2"></td>
+                            <td><input type="radio" name="p3_6" value="3"></td>
+                            <td><input type="radio" name="p3_6" value="4"></td>
+                            <td><input type="radio" name="p3_6" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Participación en clase (responder a preguntas, exposiciones, etc.)</td>
+                            <td><input type="radio" name="p3_7" value="1"></td>
+                            <td><input type="radio" name="p3_7" value="2"></td>
+                            <td><input type="radio" name="p3_7" value="3"></td>
+                            <td><input type="radio" name="p3_7" value="4"></td>
+                            <td><input type="radio" name="p3_7" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Tiempo limitado para hacer el trabajo</td>
+                            <td><input type="radio" name="p3_8" value="1"></td>
+                            <td><input type="radio" name="p3_8" value="2"></td>
+                            <td><input type="radio" name="p3_8" value="3"></td>
+                            <td><input type="radio" name="p3_8" value="4"></td>
+                            <td><input type="radio" name="p3_8" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Otra:</td>
+                            <td colspan="5">
+                                <input type="text" class="especificar-input" placeholder="Especificar">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Pregunta 4 - Síntomas -->
+                <div class="test-section">
+                    <h3>4. Reacciones durante los momentos de estrés</h3>
+                    
+                    <h4>Físicas</h4>
+                    <table class="likert-table">
+                        <tr>
+                            <th>Síntoma</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                        </tr>
+                        <tr>
+                            <td>Trastornos en el sueño (insomnio o pesadillas)</td>
+                            <td><input type="radio" name="p4_f1" value="1"></td>
+                            <td><input type="radio" name="p4_f1" value="2"></td>
+                            <td><input type="radio" name="p4_f1" value="3"></td>
+                            <td><input type="radio" name="p4_f1" value="4"></td>
+                            <td><input type="radio" name="p4_f1" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Fatiga crónica (cansancio permanente)</td>
+                            <td><input type="radio" name="p4_f2" value="1"></td>
+                            <td><input type="radio" name="p4_f2" value="2"></td>
+                            <td><input type="radio" name="p4_f2" value="3"></td>
+                            <td><input type="radio" name="p4_f2" value="4"></td>
+                            <td><input type="radio" name="p4_f2" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Dolores de cabeza o migrañas</td>
+                            <td><input type="radio" name="p4_f3" value="1"></td>
+                            <td><input type="radio" name="p4_f3" value="2"></td>
+                            <td><input type="radio" name="p4_f3" value="3"></td>
+                            <td><input type="radio" name="p4_f3" value="4"></td>
+                            <td><input type="radio" name="p4_f3" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Problemas de digestión, dolor abdominal o diarrea</td>
+                            <td><input type="radio" name="p4_f4" value="1"></td>
+                            <td><input type="radio" name="p4_f4" value="2"></td>
+                            <td><input type="radio" name="p4_f4" value="3"></td>
+                            <td><input type="radio" name="p4_f4" value="4"></td>
+                            <td><input type="radio" name="p4_f4" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Rascarse, morderse las uñas, frotarse, etc.</td>
+                            <td><input type="radio" name="p4_f5" value="1"></td>
+                            <td><input type="radio" name="p4_f5" value="2"></td>
+                            <td><input type="radio" name="p4_f5" value="3"></td>
+                            <td><input type="radio" name="p4_f5" value="4"></td>
+                            <td><input type="radio" name="p4_f5" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Somnolencia o mayor necesidad de dormir</td>
+                            <td><input type="radio" name="p4_f6" value="1"></td>
+                            <td><input type="radio" name="p4_f6" value="2"></td>
+                            <td><input type="radio" name="p4_f6" value="3"></td>
+                            <td><input type="radio" name="p4_f6" value="4"></td>
+                            <td><input type="radio" name="p4_f6" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Otras:</td>
+                            <td colspan="5">
+                                <input type="text" class="especificar-input" placeholder="Especificar">
+                            </td>
+                        </tr>
+                    </table>
+
+                    <h4>Psicológicas</h4>
+                    <table class="likert-table">
+                        <tr>
+                            <th>Síntoma</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                        </tr>
+                        <tr>
+                            <td>Inquietud (incapacidad de relajarse y estar tranquilo)</td>
+                            <td><input type="radio" name="p4_p1" value="1"></td>
+                            <td><input type="radio" name="p4_p1" value="2"></td>
+                            <td><input type="radio" name="p4_p1" value="3"></td>
+                            <td><input type="radio" name="p4_p1" value="4"></td>
+                            <td><input type="radio" name="p4_p1" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Sentimientos de depresión y tristeza (decaído)</td>
+                            <td><input type="radio" name="p4_p2" value="1"></td>
+                            <td><input type="radio" name="p4_p2" value="2"></td>
+                            <td><input type="radio" name="p4_p2" value="3"></td>
+                            <td><input type="radio" name="p4_p2" value="4"></td>
+                            <td><input type="radio" name="p4_p2" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Ansiedad, angustia o desesperación</td>
+                            <td><input type="radio" name="p4_p3" value="1"></td>
+                            <td><input type="radio" name="p4_p3" value="2"></td>
+                            <td><input type="radio" name="p4_p3" value="3"></td>
+                            <td><input type="radio" name="p4_p3" value="4"></td>
+                            <td><input type="radio" name="p4_p3" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Problemas de concentración</td>
+                            <td><input type="radio" name="p4_p4" value="1"></td>
+                            <td><input type="radio" name="p4_p4" value="2"></td>
+                            <td><input type="radio" name="p4_p4" value="3"></td>
+                            <td><input type="radio" name="p4_p4" value="4"></td>
+                            <td><input type="radio" name="p4_p4" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Sentimiento de agresividad o aumento de irritabilidad</td>
+                            <td><input type="radio" name="p4_p5" value="1"></td>
+                            <td><input type="radio" name="p4_p5" value="2"></td>
+                            <td><input type="radio" name="p4_p5" value="3"></td>
+                            <td><input type="radio" name="p4_p5" value="4"></td>
+                            <td><input type="radio" name="p4_p5" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Otras:</td>
+                            <td colspan="5">
+                                <input type="text" class="especificar-input" placeholder="Especificar">
+                            </td>
+                        </tr>
+                    </table>
+
+                    <h4>Comportamentales</h4>
+                    <table class="likert-table">
+                        <tr>
+                            <th>Síntoma</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                        </tr>
+                        <tr>
+                            <td>Conflictos o tendencia a polemizar o discutir</td>
+                            <td><input type="radio" name="p4_c1" value="1"></td>
+                            <td><input type="radio" name="p4_c1" value="2"></td>
+                            <td><input type="radio" name="p4_c1" value="3"></td>
+                            <td><input type="radio" name="p4_c1" value="4"></td>
+                            <td><input type="radio" name="p4_c1" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Aislamiento de los demás</td>
+                            <td><input type="radio" name="p4_c2" value="1"></td>
+                            <td><input type="radio" name="p4_c2" value="2"></td>
+                            <td><input type="radio" name="p4_c2" value="3"></td>
+                            <td><input type="radio" name="p4_c2" value="4"></td>
+                            <td><input type="radio" name="p4_c2" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Desgano para realizar las labores escolares</td>
+                            <td><input type="radio" name="p4_c3" value="1"></td>
+                            <td><input type="radio" name="p4_c3" value="2"></td>
+                            <td><input type="radio" name="p4_c3" value="3"></td>
+                            <td><input type="radio" name="p4_c3" value="4"></td>
+                            <td><input type="radio" name="p4_c3" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Aumento o reducción del consumo de alimentos</td>
+                            <td><input type="radio" name="p4_c4" value="1"></td>
+                            <td><input type="radio" name="p4_c4" value="2"></td>
+                            <td><input type="radio" name="p4_c4" value="3"></td>
+                            <td><input type="radio" name="p4_c4" value="4"></td>
+                            <td><input type="radio" name="p4_c4" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Otras:</td>
+                            <td colspan="5">
+                                <input type="text" class="especificar-input" placeholder="Especificar">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Pregunta 5 - Estrategias -->
+                <div class="test-section">
+                    <h3>5. En una escala del (1) al (5) donde (1) es nunca, (2) es rara vez, (3) es algunas veces, (4) es casi siempre y (5) es siempre, señala con qué frecuencia utilizaste las siguientes estrategias para enfrentar la situación que te causaba la preocupación o el nerviosismo.</h3>
+                    <table class="likert-table">
+                        <tr>
+                            <th>Estrategia</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                        </tr>
+                        <tr>
+                            <td>Habilidad asertiva (defender nuestras preferencias, ideas o sentimientos sin dañar a otros)</td>
+                            <td><input type="radio" name="p5_1" value="1"></td>
+                            <td><input type="radio" name="p5_1" value="2"></td>
+                            <td><input type="radio" name="p5_1" value="3"></td>
+                            <td><input type="radio" name="p5_1" value="4"></td>
+                            <td><input type="radio" name="p5_1" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Elaboración de un plan y ejecución de sus tareas</td>
+                            <td><input type="radio" name="p5_2" value="1"></td>
+                            <td><input type="radio" name="p5_2" value="2"></td>
+                            <td><input type="radio" name="p5_2" value="3"></td>
+                            <td><input type="radio" name="p5_2" value="4"></td>
+                            <td><input type="radio" name="p5_2" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Elogios a sí mismo</td>
+                            <td><input type="radio" name="p5_3" value="1"></td>
+                            <td><input type="radio" name="p5_3" value="2"></td>
+                            <td><input type="radio" name="p5_3" value="3"></td>
+                            <td><input type="radio" name="p5_3" value="4"></td>
+                            <td><input type="radio" name="p5_3" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>La religiosidad (oraciones o asistencia a misa)</td>
+                            <td><input type="radio" name="p5_4" value="1"></td>
+                            <td><input type="radio" name="p5_4" value="2"></td>
+                            <td><input type="radio" name="p5_4" value="3"></td>
+                            <td><input type="radio" name="p5_4" value="4"></td>
+                            <td><input type="radio" name="p5_4" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Búsqueda de información sobre la situación</td>
+                            <td><input type="radio" name="p5_5" value="1"></td>
+                            <td><input type="radio" name="p5_5" value="2"></td>
+                            <td><input type="radio" name="p5_5" value="3"></td>
+                            <td><input type="radio" name="p5_5" value="4"></td>
+                            <td><input type="radio" name="p5_5" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Ventilación y confidencias (verbalización de la situación que preocupa)</td>
+                            <td><input type="radio" name="p5_6" value="1"></td>
+                            <td><input type="radio" name="p5_6" value="2"></td>
+                            <td><input type="radio" name="p5_6" value="3"></td>
+                            <td><input type="radio" name="p5_6" value="4"></td>
+                            <td><input type="radio" name="p5_6" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Otra:</td>
+                            <td colspan="5">
+                                <input type="text" class="especificar-input" placeholder="Especificar">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <button type="submit" class="btn">Calcular Resultado</button>
+            </div>
+
+            <!-- Mensaje si responde No -->
+            <div id="mensaje-fin">
+                <h3>Gracias por tu participación</h3>
+                <p>El cuestionario se da por concluido.</p>
+            </div>
+        </form>
+
+        <!-- Sección de Resultados -->
+        <div id="resultado-container">
+            <h2 class="result-title">Resultado del Test SISCO</h2>
+            <div class="result-score">Puntuación: <span id="puntuacion-total">0</span></div>
+            <div class="result-interpretation">
+                <h3>Interpretación:</h3>
+                <p id="interpretacion-resultado">Aquí aparecerá la interpretación de tus resultados.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Lógica para mostrar/ocultar secciones
+    document.querySelectorAll('input[name="pregunta1"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const secciones = document.getElementById('secciones-test');
+            const mensajeFin = document.getElementById('mensaje-fin');
+            
+            if (this.value === 'si') {
+                secciones.style.display = 'block';
+                mensajeFin.style.display = 'none';
+            } else {
+                secciones.style.display = 'none';
+                mensajeFin.style.display = 'block';
+                document.getElementById('resultado-container').style.display = 'none';
+            }
+        });
+    });
+
+    // Calcular resultados según baremo SISCO
+    document.getElementById('form-sisco').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Verificar si el usuario es candidato a continuar
+        if (document.querySelector('input[name="pregunta1"]:checked').value === 'no') {
+            document.getElementById('mensaje-fin').style.display = 'block';
+            return;
+        }
+        
+        // 1. Calcular puntuación total según valores asignados
+        let puntajeTotal = 0;
+        let totalItems = 0; // Contador de ítems respondidos
+        
+        // Pregunta 2 (Intensidad): 1-5 (valor directo)
+        const intensidad = parseInt(document.querySelector('input[name="pregunta2"]:checked')?.value || 0);
+        puntajeTotal += intensidad;
+        totalItems++;
+        
+        // Pregunta 3 (Estresores): 8 ítems (nunca=0, rara vez=1, algunas veces=2, casi siempre=3, siempre=4)
+        for (let i = 1; i <= 8; i++) {
+            const respuesta = document.querySelector(`input[name="p3_${i}"]:checked`);
+            if (respuesta) {
+                const valor = parseInt(respuesta.value) - 1; // Convertir 1-5 a 0-4
+                puntajeTotal += valor;
+                totalItems++;
+            }
+        }
+        
+        // Pregunta 4 (Síntomas): 15 ítems (misma escala)
+        // Físicos (6 ítems)
+        for (let i = 1; i <= 6; i++) {
+            const respuesta = document.querySelector(`input[name="p4_f${i}"]:checked`);
+            if (respuesta) {
+                const valor = parseInt(respuesta.value) - 1;
+                puntajeTotal += valor;
+                totalItems++;
+            }
+        }
+        
+        // Psicológicos (5 ítems)
+        for (let i = 1; i <= 5; i++) {
+            const respuesta = document.querySelector(`input[name="p4_p${i}"]:checked`);
+            if (respuesta) {
+                const valor = parseInt(respuesta.value) - 1;
+                puntajeTotal += valor;
+                totalItems++;
+            }
+        }
+        
+        // Comportamentales (4 ítems)
+        for (let i = 1; i <= 4; i++) {
+            const respuesta = document.querySelector(`input[name="p4_c${i}"]:checked`);
+            if (respuesta) {
+                const valor = parseInt(respuesta.value) - 1;
+                puntajeTotal += valor;
+                totalItems++;
+            }
+        }
+        
+        // Pregunta 5 (Estrategias): 6 ítems (misma escala)
+        for (let i = 1; i <= 6; i++) {
+            const respuesta = document.querySelector(`input[name="p5_${i}"]:checked`);
+            if (respuesta) {
+                const valor = parseInt(respuesta.value) - 1;
+                puntajeTotal += valor;
+                totalItems++;
+            }
+        }
+        
+        // 2. Calcular porcentaje según baremo SISCO
+        const puntajeMaximo = totalItems * 4; // Máximo 4 puntos por ítem (siempre)
+        const porcentaje = (puntajeTotal / puntajeMaximo) * 100;
+        
+        // 3. Interpretación según baremo
+        let nivelEstres = '';
+        let recomendaciones = '';
+        
+        if (porcentaje <= 33) {
+            nivelEstres = 'LEVE';
+            recomendaciones = 'Tu nivel de estrés es manejable. Sigue manteniendo buenos hábitos de estudio y técnicas de relajación.';
+        } else if (porcentaje <= 66) {
+            nivelEstres = 'MODERADO';
+            recomendaciones = 'Considera implementar más estrategias de afrontamiento y buscar apoyo si persiste.';
+        } else {
+            nivelEstres = 'SEVERO';
+            recomendaciones = 'Recomendamos buscar apoyo profesional. Tu nivel de estrés puede estar afectando tu rendimiento y bienestar.';
+        }
+        
+        // Mostrar resultados
+        const resultadoContainer = document.getElementById('resultado-container');
+        const puntuacionTotal = document.getElementById('puntuacion-total');
+        const interpretacion = document.getElementById('interpretacion-resultado');
+        
+        puntuacionTotal.innerHTML = `${porcentaje.toFixed(1)}% <span class="nivel-estres">(${nivelEstres})</span>`;
+        interpretacion.innerHTML = `
+            <p><strong>Interpretación:</strong> ${nivelEstres} de estrés académico según el baremo SISCO.</p>
+            <p><strong>Recomendaciones:</strong> ${recomendaciones}</p>
+            <p><strong>Detalle:</strong> Puntuación cruda: ${puntajeTotal} / ${puntajeMaximo}</p>
+        `;
+        
+        // Estilo según nivel de estrés
+        resultadoContainer.className = '';
+        resultadoContainer.classList.add(nivelEstres.toLowerCase());
+        
+        resultadoContainer.style.display = 'block';
+        resultadoContainer.scrollIntoView({ behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Psicológica Integral</title>
+    <style>
+        :root {
+            --primary-color: #8BABD8;    /* Azul pastel suave */
+            --secondary-color: #A3D9B0;  /* Verde pastel */
+            --accent-color: #FFC8A3;    /* Melocotón pastel */
+            --background: #F9F9F9;       /* Fondo casi blanco */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background);
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 0;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-container {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .test-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .test-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-title {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-size: 1.4em;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .test-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Evaluación Integral de Salud</h1>
+            <p>Seleccione el test que desea realizar</p>
+        </header>
+
+        <div class="test-container">
+            <!-- Tarjeta SISCO -->
+            <div class="test-card">
+                <h2 class="test-title">📚 SISCO - Estrés Académico</h2>
+                <p>Evalúa tus niveles de estrés relacionados con actividades académicas mediante 21 preguntas estandarizadas.</p>
+                <a href="sisco.html" class="btn" id="btn-sisco">Comenzar Test</a>
+            </div>
+
+            <!-- Tarjeta PSQI -->
+            <div class="test-card">
+                <h2 class="test-title">🌙 PSQI - Calidad del Sueño</h2>
+                <p>Mide la calidad de tu sueño en el último mes con el índice validado de Pittsburgh (19 items).</p>
+                <a href="psqi.html" class="btn" id="btn-psqi">Comenzar Test</a>
+            </div>
+
+            <!-- Tarjeta GPAQ -->
+            <div class="test-card">
+                <h2 class="test-title">🏃 GPAQ - Actividad Física</h2>
+                <p>Evaluación de actividad física según estándares de la OMS (16 preguntas sobre actividad semanal).</p>
+                <a href="gpaq.html" class="btn" id="btn-gpaq">Comenzar Test</a>
+            </div>
+        </div>
+
+        <footer style="text-align: center; margin-top: 3rem; color: #666;">
+            
+        </footer>
+    </div>
+</body>
+</html>

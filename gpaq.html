@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPAQ - Actividad Física</title>
+    <style>
+        :root {
+            --primary-color: #8BABD8;
+            --secondary-color: #A3D9B0;
+            --accent-color: #A3D9FF;
+            --background: #F9F9F9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background);
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .test-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .question-group {
+            margin: 1.5rem 0;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin: 0.5rem 0;
+        }
+
+        input[type="number"] {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100px;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .options-group {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .resultado {
+            display: none;
+            background: var(--accent-color);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .input-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏃 GPAQ - Actividad Física</h1>
+            <p>Evaluación de actividad física según estándares OMS</p>
+        </div>
+
+        <form id="form-gpaq">
+            <!-- Sección Trabajo -->
+            <div class="test-section">
+                <h2>Actividad en el Trabajo</h2>
+                
+                <!-- Pregunta 49 -->
+                <div class="question-group">
+                    <h3>49. ¿Su trabajo requiere actividad física intensa? (ej: levantar objetos pesados, cavar, construcción)</h3>
+                    <div class="options-group">
+                        <label><input type="radio" name="p49" value="1" required> Sí</label>
+                        <label><input type="radio" name="p49" value="0"> No</label>
+                    </div>
+                </div>
+
+                <!-- Pregunta 50 -->
+                <div class="question-group" id="grupo-p50">
+                    <h3>50. Días por semana con actividad intensa</h3>
+                    <div class="input-row">
+                        <input type="number" name="p50_dias" min="0" max="7">
+                        <span>días por semana</span>
+                    </div>
+                </div>
+
+                <!-- Pregunta 51 -->
+                <div class="question-group" id="grupo-p51">
+                    <h3>51. Tiempo diario de actividad intensa</h3>
+                    <div class="input-row">
+                        <input type="number" name="p51_horas" min="0" max="24" placeholder="Horas">
+                        <input type="number" name="p51_min" min="0" max="59" placeholder="Minutos">
+                    </div>
+                </div>
+
+                <!-- Pregunta 52 -->
+                <div class="question-group">
+                    <h3>52. ¿Su trabajo requiere actividad moderada? (ej: caminar con carga, limpieza general)</h3>
+                    <div class="options-group">
+                        <label><input type="radio" name="p52" value="1" required> Sí</label>
+                        <label><input type="radio" name="p52" value="0"> No</label>
+                    </div>
+                </div>
+
+                <!-- Pregunta 53 -->
+                <div class="question-group" id="grupo-p53">
+                    <h3>53. Días por semana con actividad moderada</h3>
+                    <div class="input-row">
+                        <input type="number" name="p53_dias" min="0" max="7">
+                        <span>días por semana</span>
+                    </div>
+                </div>
+
+                <!-- Pregunta 54 -->
+                <div class="question-group" id="grupo-p54">
+                    <h3>54. Tiempo diario de actividad moderada</h3>
+                    <div class="input-row">
+                        <input type="number" name="p54_horas" min="0" max="24" placeholder="Horas">
+                        <input type="number" name="p54_min" min="0" max="59" placeholder="Minutos">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Transporte -->
+            <div class="test-section">
+                <h2>Desplazamientos</h2>
+                
+                <!-- Pregunta 55 -->
+                <div class="question-group">
+                    <h3>55. ¿Camina o usa bicicleta ≥10 min para desplazarse? (ej: ir al trabajo, hacer compras)</h3>
+                    <div class="options-group">
+                        <label><input type="radio" name="p55" value="1" required> Sí</label>
+                        <label><input type="radio" name="p55" value="0"> No</label>
+                    </div>
+                </div>
+
+                <!-- Pregunta 56 -->
+                <div class="question-group" id="grupo-p56">
+                    <h3>56. Días por semana de desplazamiento activo</h3>
+                    <div class="input-row">
+                        <input type="number" name="p56_dias" min="0" max="7">
+                        <span>días por semana</span>
+                    </div>
+                </div>
+
+                <!-- Pregunta 57 -->
+                <div class="question-group" id="grupo-p57">
+                    <h3>57. Tiempo diario de desplazamiento activo</h3>
+                    <div class="input-row">
+                        <input type="number" name="p57_horas" min="0" max="24" placeholder="Horas">
+                        <input type="number" name="p57_min" min="0" max="59" placeholder="Minutos">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Tiempo Libre -->
+            <div class="test-section">
+                <h2>Actividad en Tiempo Libre</h2>
+                
+                <!-- Pregunta 58 -->
+                <div class="question-group">
+                    <h3>58. ¿Practica deportes intensos ≥10 min? (ej: correr, fútbol, natación rápida)</h3>
+                    <div class="options-group">
+                        <label><input type="radio" name="p58" value="1" required> Sí</label>
+                        <label><input type="radio" name="p58" value="0"> No</label>
+                    </div>
+                </div>
+
+                <!-- Pregunta 59 -->
+                <div class="question-group" id="grupo-p59">
+                    <h3>59. Días/semana de deportes intensos</h3>
+                    <div class="input-row">
+                        <input type="number" name="p59_dias" min="0" max="7">
+                        <span>días por semana</span>
+                    </div>
+                </div>
+
+                <!-- Pregunta 60 -->
+                <div class="question-group" id="grupo-p60">
+                    <h3>60. Tiempo diario de deportes intensos</h3>
+                    <div class="input-row">
+                        <input type="number" name="p60_horas" min="0" max="24" placeholder="Horas">
+                        <input type="number" name="p60_min" min="0" max="59" placeholder="Minutos">
+                    </div>
+                </div>
+
+                <!-- Pregunta 61 -->
+                <div class="question-group">
+                    <h3>61. ¿Practica actividades moderadas ≥10 min? (ej: caminata rápida, ciclismo recreativo)</h3>
+                    <div class="options-group">
+                        <label><input type="radio" name="p61" value="1" required> Sí</label>
+                        <label><input type="radio" name="p61" value="0"> No</label>
+                    </div>
+                </div>
+
+                <!-- Pregunta 62 -->
+                <div class="question-group" id="grupo-p62">
+                    <h3>62. Días por semana de actividades moderadas</h3>
+                    <div class="input-row">
+                        <input type="number" name="p62_dias" min="0" max="7">
+                        <span>días por semana</span>
+                    </div>
+                </div>
+
+                <!-- Pregunta 63 -->
+                <div class="question-group" id="grupo-p63">
+                    <h3>63. Tiempo diario de actividades moderadas</h3>
+                    <div class="input-row">
+                        <input type="number" name="p63_horas" min="0" max="24" placeholder="Horas">
+                        <input type="number" name="p63_min" min="0" max="59" placeholder="Minutos">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comportamiento Sedentario -->
+            <div class="test-section">
+                <h2>Comportamiento Sedentario</h2>
+                
+                <!-- Pregunta 64 -->
+                <div class="question-group">
+                    <h3>64. Tiempo diario sentado/recostado (ej: ver TV, trabajar en computadora)</h3>
+                    <div class="input-row">
+                        <input type="number" name="p64_horas" min="0" max="24" placeholder="Horas" required>
+                        <input type="number" name="p64_min" min="0" max="59" placeholder="Minutos" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn">Calcular Resultado</button>
+        </form>
+
+        <!-- Sección de Resultados -->
+        <div class="resultado" id="resultado">
+            <h2>Resultados GPAQ</h2>
+            <div id="detalle-resultados">
+                <p><strong>Minutos MET de actividad intensa:</strong> <span id="met-intensa">0</span></p>
+                <p><strong>Minutos MET de actividad moderada:</strong> <span id="moderada">0</span></p>
+                <p><strong>Minutos MET de caminata/desplazamiento:</strong> <span id="caminata">0</span></p>
+                <h3>Total minutos MET semanales: <span id="total-met">0</span></h3>
+                <p><strong>Nivel de actividad física:</strong> <span id="nivel-actividad"></span></p>
+                <p><strong>Interpretación:</strong> <span id="interpretacion"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Mostrar/ocultar preguntas según respuestas
+    const setupQuestionToggle = (questionName, dependentIds) => {
+        document.querySelectorAll(`input[name="${questionName}"]`).forEach(radio => {
+            radio.addEventListener('change', function() {
+                const show = this.value === '1';
+                dependentIds.forEach(id => {
+                    document.getElementById(id).classList.toggle('hidden', !show);
+                });
+            });
+        });
+    };
+
+    // Configurar todos los grupos de preguntas condicionales
+    setupQuestionToggle('p49', ['grupo-p50', 'grupo-p51']);
+    setupQuestionToggle('p52', ['grupo-p53', 'grupo-p54']);
+    setupQuestionToggle('p55', ['grupo-p56', 'grupo-p57']);
+    setupQuestionToggle('p58', ['grupo-p59', 'grupo-p60']);
+    setupQuestionToggle('p61', ['grupo-p62', 'grupo-p63']);
+
+    // Ocultar inicialmente grupos dependientes
+    [
+        'grupo-p50', 'grupo-p51', 'grupo-p53', 'grupo-p54',
+        'grupo-p56', 'grupo-p57', 'grupo-p59', 'grupo-p60',
+        'grupo-p62', 'grupo-p63'
+    ].forEach(id => document.getElementById(id).classList.add('hidden'));
+
+    // Calcular resultados
+    document.getElementById('form-gpaq').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Obtener valores del formulario
+        const formData = new FormData(this);
+        
+        // Función para parsear minutos de actividad
+        const parseActivityMinutes = (daysField, hoursField, minsField) => {
+            const dias = parseInt(formData.get(daysField) || 0);
+            const horas = parseInt(formData.get(hoursField) || 0);
+            const minutos = parseInt(formData.get(minsField) || 0);
+            return {
+                dias,
+                totalMinutos: (horas * 60) + minutos
+            };
+        };
+        
+        // Calcular minutos MET para cada categoría
+        let metIntensa = 0;
+        let metModerada = 0;
+        let metCaminata = 0;
+        
+        // Actividad intensa en el trabajo
+        if(formData.get('p49') === '1') {
+            const { dias, totalMinutos } = parseActivityMinutes('p50_dias', 'p51_horas', 'p51_min');
+            metIntensa += dias * totalMinutos * 8; // 8 METs para actividad vigorosa
+        }
+        
+        // Actividad moderada en el trabajo
+        if(formData.get('p52') === '1') {
+            const { dias, totalMinutos } = parseActivityMinutes('p53_dias', 'p54_horas', 'p54_min');
+            metModerada += dias * totalMinutos * 4; // 4 METs para actividad moderada
+        }
+        
+        // Desplazamiento activo (caminata/bicicleta)
+        if(formData.get('p55') === '1') {
+            const { dias, totalMinutos } = parseActivityMinutes('p56_dias', 'p57_horas', 'p57_min');
+            metCaminata += dias * totalMinutos * 3.3; // 3.3 METs para caminar
+        }
+        
+        // Deportes intensos en tiempo libre
+        if(formData.get('p58') === '1') {
+            const { dias, totalMinutos } = parseActivityMinutes('p59_dias', 'p60_horas', 'p60_min');
+            metIntensa += dias * totalMinutos * 8;
+        }
+        
+        // Actividades moderadas en tiempo libre
+        if(formData.get('p61') === '1') {
+            const { dias, totalMinutos } = parseActivityMinutes('p62_dias', 'p63_horas', 'p63_min');
+            metModerada += dias * totalMinutos * 4;
+        }
+        
+        // Calcular total MET
+        const totalMET = metIntensa + metModerada + metCaminata;
+        
+        // Determinar nivel de actividad
+        let nivel = '';
+        let interpretacion = '';
+        
+        if(totalMET < 600) {
+            nivel = 'Baja';
+            interpretacion = 'Menos de 600 minutos MET semanales. Se recomienda aumentar la actividad física para cumplir con las recomendaciones de la OMS (al menos 600 minutos MET semanales).';
+        } else if(totalMET <= 1000) {
+            nivel = 'Moderada';
+            interpretacion = 'Entre 600 y 1000 minutos MET semanales. Cumple con las recomendaciones mínimas de la OMS para actividad física.';
+        } else {
+            nivel = 'Alta';
+            interpretacion = 'Más de 1000 minutos MET semanales. Excelente nivel de actividad física que supera las recomendaciones de la OMS.';
+        }
+        
+        // Mostrar resultados
+        document.getElementById('met-intensa').textContent = metIntensa;
+        document.getElementById('moderada').textContent = metModerada;
+        document.getElementById('caminata').textContent = metCaminata;
+        document.getElementById('total-met').textContent = totalMET;
+        document.getElementById('nivel-actividad').textContent = nivel;
+        document.getElementById('interpretacion').textContent = interpretacion;
+        
+        // Mostrar sección de resultados
+        document.getElementById('resultado').style.display = 'block';
+        document.getElementById('resultado').scrollIntoView({ behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>
